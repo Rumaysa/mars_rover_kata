@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class MarsRover
-  def initialize(position, direction)
+  def initialize(position, direction,grid_size)
     @position = position
     @direction = direction
     @cardinals = %w[N E S W].freeze
+    @grid_size = grid_size
+
   end
 
   attr_reader :position
@@ -29,10 +31,15 @@ class MarsRover
   end
 
   def forwards
+    
     @position[1] += 1 if @direction == 'N'
-    @position[0] += 1 if @direction == 'E'
+    @position[1] = @grid_size[1][0] if @position[1] > @grid_size[1][1]
     @position[1] -= 1 if @direction == 'S'
+    @position[1] = @grid_size[1][1] if @position[1] < @grid_size[1][0]
+    @position[0] += 1 if @direction == 'E'
+    @position[0] = @grid_size[0][0] if @position[0] > @grid_size[0][1]
     @position[0] -= 1 if @direction == 'W'
+    @position[0] = @grid_size[0][1] if @position[0] < @grid_size[0][0]
   end
 
   def backwards

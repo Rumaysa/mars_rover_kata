@@ -5,30 +5,30 @@ require_relative '../lib/mars_rover.rb'
 describe MarsRover do
   context 'returns position' do
     it 'should return the position of the rover' do
-      rover = MarsRover.new([0, 0], 'N')
+      rover = MarsRover.new([0, 0], 'N',[[-10,10],[-10,10]])
       expect(rover.position).to eq([0, 0])
     end
 
     it 'should return a different position of the rover' do
-      rover = MarsRover.new([1, 1], 'N')
+      rover = MarsRover.new([1, 1], 'N',[[-10,10],[-10,10]])
       expect(rover.position).to eq([1, 1])
     end
   end
 
   context 'returns direction' do
     it 'returns N when facing north' do
-      rover = MarsRover.new([0, 0], 'N')
+      rover = MarsRover.new([0, 0], 'N',[[-10,10],[-10,10]])
       expect(rover.direction).to eq('N')
     end
 
     it 'returns E when facing east' do
-      rover = MarsRover.new([0, 0], 'E')
+      rover = MarsRover.new([0, 0], 'E',[[-10,10],[-10,10]])
       expect(rover.direction).to eq('E')
     end
   end
 
   context 'whilst facing north' do
-    let (:rover) { MarsRover.new([0, 0], 'N') }
+    let (:rover) { MarsRover.new([0, 0], 'N',[[-10,10],[-10,10]]) }
     context 'moving forwards and backwards' do
       it 'can move forwards' do
         rover.execute(['f'])
@@ -84,7 +84,7 @@ describe MarsRover do
   end
 
   context 'whilst facing east' do
-    let (:rover) { MarsRover.new([0, 0], 'E') }
+    let (:rover) { MarsRover.new([0, 0], 'E',[[-10,10],[-10,10]]) }
     context 'moving forwards and backwards' do
       it 'can move forward' do
         rover.execute(['f'])
@@ -119,7 +119,7 @@ describe MarsRover do
   end
 
   context 'whilst facing south' do
-    let (:rover) { MarsRover.new([0, 0], 'S') }
+    let (:rover) { MarsRover.new([0, 0], 'S',[[-10,10],[-10,10]]) }
     context 'moving forwards and backwards' do
       it 'moves forward' do
         rover.execute(['f'])
@@ -150,7 +150,7 @@ describe MarsRover do
   end
 
   context 'whilst facing west' do
-    let(:rover) { MarsRover.new([0, 0], 'W') }
+    let(:rover) { MarsRover.new([0, 0], 'W',[[-10,10],[-10,10]]) }
     context 'whilst moving forwards and backwards' do
       it 'can move forward' do
         rover.execute(['f'])
@@ -175,7 +175,7 @@ describe MarsRover do
   end
 
   context 'multiple instructions' do
-    let (:rover) { MarsRover.new([0,0],'N')}
+    let (:rover) { MarsRover.new([0,0],'N',[[-10,10],[-10,10]])}
     it 'can return its new position and direction' do 
       rover.execute(['l','f', 'f', 'r'])
       expect(rover.position).to eq([-2,0])
@@ -188,4 +188,31 @@ describe MarsRover do
       expect(rover.direction).to eq('W')
     end
   end
+
+  context 'reaches the edge of the grid' do
+    it 'loops back to the opposite side of the grid' do
+      rover = MarsRover.new([0,10],'N',[[-10,10],[-10,10]])
+      rover.execute(['f'])
+      expect(rover.position).to eq([0,-10])
+    end
+
+    it 'loops back to the opposite side of the grid' do
+      rover = MarsRover.new([10,0],'E',[[-10,10],[-10,10]])
+      rover.execute(['f'])
+      expect(rover.position).to eq([-10, 0])
+    end
+
+    it 'loops back to the opposite side of the grid' do
+      rover = MarsRover.new([0,-10],'S',[[-10,10],[-10,10]])
+      rover.execute(['f'])
+      expect(rover.position).to eq([0, 10])
+    end
+
+    it 'loops back to the opposite side of the grid' do
+      rover = MarsRover.new([-10,0],'W',[[-10,10],[-10,10]])
+      rover.execute(['f'])
+      expect(rover.position).to eq([10,0])
+    end
+  end
+
 end
